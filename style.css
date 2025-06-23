@@ -1,0 +1,97 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: url('default.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  text-align: center;
+  font-size: 1.8em;
+  font-weight: 600;
+}
+
+.logo {
+  color: #00e6e6;
+  text-decoration: none;
+}
+
+.logo:hover {
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.container {
+  flex-grow: 1;
+  text-align: center;
+  padding: 40px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  margin-top: 40px;
+}
+
+h1 {
+  font-size: 2.4em;
+  margin-bottom: 10px;
+  color: #00e6e6;
+}
+
+.tagline {
+  font-size: 1em;
+  color: #ffffff;
+  margin-bottom: 30px;
+}
+
+input[type="text"] {
+  padding: 12px;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+  margin-bottom: 20px;
+}
+
+.button-group button {
+  margin: 6px;
+  padding: 10px 16px;
+  background: #00bcd4;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.3s ease;
+}
+
+.button-group button:hover {
+  background: #0097a7;
+}
+
+#weatherResult {
+  margin-top: 30px;
+  font-size: 1.1em;
+  background-color: rgba(0,0,0,0.3);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #00e6e6;
+}
+
+footer {
+  text-align: center;
+  padding: 15px;
+  background-color: #111;
+  font-size: 0.9em;
+  color: #aaa;
+  border-top: 1px solid #333;
+}
