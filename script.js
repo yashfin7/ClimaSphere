@@ -86,14 +86,14 @@ function startVoiceInput() {
 
 // ✅ GPT suggestion function (calls your Replit backend)
 async function getAISuggestion(temp, weather) {
+  console.log("🚀 Sending GPT request with:", temp, weather);
   const response = await fetch("https://708573c4-e2df-41bf-a28d-9a0ac39895b4-00-1p31yxty7yvy2.pike.replit.dev/ask", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ temp, weather })
   });
 
-  const data = await response.json();
+  const data = await response.text(); // or .json() depending on backend
+  console.log("📥 GPT response received:", data);
   return data;
 }
