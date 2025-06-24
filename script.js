@@ -2,7 +2,7 @@ function getWeather(cityName = null) {
   let city = cityName || document.getElementById("cityInput").value;
   city = city.trim().toLowerCase(); // lowercase and remove extra spaces
 
-  const apiKey = "a3b844712f6b388574ac3732c97747d1";
+  const apiKey = "86612f19c99927ac845b1baf860e3fb7";
 
   fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
     .then(response => {
