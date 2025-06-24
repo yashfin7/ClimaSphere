@@ -1,42 +1,54 @@
 function getWeather(cityName = null) {
   let city = cityName || document.getElementById("cityInput").value;
-  city = city.trim().toLowerCase(); // lowercase and remove extra spaces
+  city = city.trim().toLowerCase(); // sanitize input
 
-  const apiKey = "a3b844712f6b388574ac3732c97747d1";
+  const apiKey = "8a34dd1f054d4133880191014252406 "; // 🔁 Replace this with your WeatherAPI key
 
-  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+  fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`)
     .then(response => {
-      if (!response.ok) throw new Error("City not found");
+      if (!response.ok) throw new Error("Location not found");
       return response.json();
     })
     .then(data => {
-      const name = data.name;
-      const temp = data.main.temp;
-      const weather = data.weather[0].description;
-      const main = data.weather[0].main.toLowerCase();
+      const name = data.location.name;
+      const region = data.location.region;
+      const country = data.location.country;
+      const temp = data.current.temp_c;
+      const condition = data.current.condition.text.toLowerCase();
 
-      // Set background image based on weather
+      // Background logic
       let bg = 'default.jpg';
-      if (main.includes("rain")) bg = 'rain.jpg';
-      else if (main.includes("cloud")) bg = 'cloud.jpeg';
-      else if (main.includes("clear")) bg = 'sunny.jpg';
-      else if (main.includes("snow")) bg = 'snow.jpg';
+      if (condition.includes("rain")) bg = 'rain.jpg';
+      else if (condition.includes("cloud")) bg = 'cloud.jpeg';
+      else if (condition.includes("sun") || condition.includes("clear")) bg = 'sunny.jpg';
+      else if (condition.includes("snow")) bg = 'snow.jpg';
 
       document.body.style.backgroundImage = `url('${bg}')`;
 
+      // Local advice
       let advice = "";
-      if (weather.includes("rain")) advice = "☔ Don't forget your umbrella!";
-      else if (weather.includes("clear")) advice = "😎 It’s sunny, wear sunglasses!";
-      else if (weather.includes("cloud")) advice = "☁️ Looks cloudy, carry a light jacket.";
+      if (condition.includes("rain")) advice = "☔ Don't forget your umbrella!";
+      else if (condition.includes("sun")) advice = "😎 It’s sunny, wear sunglasses!";
+      else if (condition.includes("cloud")) advice = "☁️ Looks cloudy, carry a light jacket.";
       else if (temp > 35) advice = "🔥 It's hot! Stay hydrated.";
       else if (temp < 10) advice = "🧥 It's cold! Wear a jacket.";
       else advice = "🌈 Have a great day!";
 
+      // Display result
       document.getElementById("weatherResult").innerHTML =
-        `🌍 City: ${name}<br>🌡 Temperature: ${temp}°C<br>🌥 Weather: ${weather}<br><br>💡 <strong>Suggestion:</strong> ${advice}`;
+        `📍 Location: ${name}, ${region}, ${country}<br>
+         🌡 Temperature: ${temp}°C<br>
+         🌥 Condition: ${condition}<br><br>
+         💡 <strong>Suggestion:</strong> ${advice}`;
+
+      // AI suggestion from GPT
+      getAISuggestion(temp, condition).then(aiAdvice => {
+        document.getElementById("weatherResult").innerHTML +=
+          `<br><br>🧠 <strong>GPT Suggestion:</strong> ${aiAdvice}`;
+      });
     })
     .catch(error => {
-      document.getElementById("weatherResult").innerHTML = "City not found 😢";
+      document.getElementById("weatherResult").innerHTML = "❗ Location not found. Try again.";
     });
 }
 
@@ -45,11 +57,11 @@ function getLocationWeather() {
     navigator.geolocation.getCurrentPosition(position => {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-      const apiKey = "a3b844712f6b388574ac3732c97747d1";
+      const apiKey = "8a34dd1f054d4133880191014252406 "; // 🔁 Replace here too
 
-      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
+      fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}`)
         .then(response => response.json())
-        .then(data => getWeather(data.name));
+        .then(data => getWeather(data.location.name));
     });
   } else {
     alert("Geolocation not supported by your browser.");
@@ -70,4 +82,18 @@ function startVoiceInput() {
   recognition.onerror = function(event) {
     alert("Voice recognition error: " + event.error);
   };
+}
+
+// ✅ GPT Suggestion Function (calls your Replit backend)
+async function getAISuggestion(temp, weather) {
+  const response = await fetch("https://708573c4-e2df-41bf-a28d-9a0ac39895b4-00-1p31yxty7yvy2.pike.replit.dev/ask", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ temp, weather })
+  });
+
+  const data = await response.json();
+  return data;
 }
