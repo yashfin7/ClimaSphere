@@ -1,8 +1,8 @@
 function getWeather(cityName = null) {
   let city = cityName || document.getElementById("cityInput").value;
-  city = city.trim().toLowerCase(); // sanitize input
+  city = city.trim().toLowerCase();
 
-  const apiKey = "8a34dd1f054d4133880191014252406 "; // 🔁 Replace this with your WeatherAPI key
+  const apiKey = "8a34dd1f054d4133880191014252406"; // ✅ Your WeatherAPI key
 
   fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`)
     .then(response => {
@@ -16,7 +16,7 @@ function getWeather(cityName = null) {
       const temp = data.current.temp_c;
       const condition = data.current.condition.text.toLowerCase();
 
-      // Background logic
+      // Set background
       let bg = 'default.jpg';
       if (condition.includes("rain")) bg = 'rain.jpg';
       else if (condition.includes("cloud")) bg = 'cloud.jpeg';
@@ -25,7 +25,7 @@ function getWeather(cityName = null) {
 
       document.body.style.backgroundImage = `url('${bg}')`;
 
-      // Local advice
+      // Local suggestion
       let advice = "";
       if (condition.includes("rain")) advice = "☔ Don't forget your umbrella!";
       else if (condition.includes("sun")) advice = "😎 It’s sunny, wear sunglasses!";
@@ -34,14 +34,14 @@ function getWeather(cityName = null) {
       else if (temp < 10) advice = "🧥 It's cold! Wear a jacket.";
       else advice = "🌈 Have a great day!";
 
-      // Display result
+      // Show result
       document.getElementById("weatherResult").innerHTML =
         `📍 Location: ${name}, ${region}, ${country}<br>
          🌡 Temperature: ${temp}°C<br>
          🌥 Condition: ${condition}<br><br>
          💡 <strong>Suggestion:</strong> ${advice}`;
 
-      // AI suggestion from GPT
+      // 🧠 GPT Suggestion (AI)
       getAISuggestion(temp, condition).then(aiAdvice => {
         document.getElementById("weatherResult").innerHTML +=
           `<br><br>🧠 <strong>GPT Suggestion:</strong> ${aiAdvice}`;
@@ -57,7 +57,7 @@ function getLocationWeather() {
     navigator.geolocation.getCurrentPosition(position => {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-      const apiKey = "8a34dd1f054d4133880191014252406 "; // 🔁 Replace here too
+      const apiKey = "8a34dd1f054d4133880191014252406"; // ✅ Your WeatherAPI key
 
       fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}`)
         .then(response => response.json())
@@ -84,7 +84,7 @@ function startVoiceInput() {
   };
 }
 
-// ✅ GPT Suggestion Function (calls your Replit backend)
+// ✅ GPT suggestion function (calls your Replit backend)
 async function getAISuggestion(temp, weather) {
   const response = await fetch("https://708573c4-e2df-41bf-a28d-9a0ac39895b4-00-1p31yxty7yvy2.pike.replit.dev/ask", {
     method: "POST",
